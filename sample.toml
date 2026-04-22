@@ -1,0 +1,17 @@
+
+# tmux session name
+name = "my-sesh"
+root = "~/Code/tmuxer"
+
+[[windows]]
+name = "editor"
+layout = "horizontal" # horizontal | vertical for now
+commands = [ # these will be run
+  "nvim .",
+  "claude"
+]
+
+
+[[windows]]
+name = "server"
+commands = ["claude"]
