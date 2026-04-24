@@ -1,4 +1,3 @@
-
 # tmux session name
 name = "my-sesh"
 root = "~/Code/tmuxer"
