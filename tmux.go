@@ -58,13 +58,19 @@ func (c Config) processWindow(window Window) {
 		panes := c.getPanes(window)
 
 		if len(panes) != 0 {
-			for i, paneIndex := range panes {
-				c.sendKeys(window, &paneIndex, i)
+
+			if len(window.Commands) != 0 {
+				for i, paneIndex := range panes {
+					c.sendKeys(window, &paneIndex, i)
+				}
 			}
+
 			c.selectPane(window, panes[0])
 		}
 	} else {
-		c.sendKeys(window, nil, 0)
+		if len(window.Commands) != 0 {
+			c.sendKeys(window, nil, 0)
+		}
 	}
 }
 
