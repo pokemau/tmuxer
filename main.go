@@ -12,8 +12,6 @@ import (
 )
 
 func main() {
-	// allow creating blank window name, blank window commands
-
 	flag.Parse()
 
 	args := flag.Args()

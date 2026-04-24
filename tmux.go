@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"os"
 	"os/exec"
@@ -28,8 +27,7 @@ func (c Config) createSession() {
 	}
 
 	if len(c.Windows) == 0 {
-		fmt.Println("NO WINDOWS")
-		return
+		log.Fatal("No windows were provided")
 	}
 
 	initCmd := exec.Command("tmux", "new-session", "-d", "-s", c.Name)
@@ -76,7 +74,14 @@ func (c Config) processWindow(window Window) {
 
 func (c Config) createWindow(window Window) {
 	// tmux new-window -t mysess -n server
-	cmd := exec.Command("tmux", "new-window", "-t", c.Name, "-n", window.Name)
+	args := []string{"new-window", "-t", c.Name}
+
+	if window.Name != "" {
+		args = append(args, "-n", window.Name)
+	}
+
+	cmd := exec.Command("tmux", args...)
+
 	if err := cmd.Run(); err != nil {
 		log.Fatal(err)
 	}
