@@ -17,7 +17,7 @@ type Window struct {
 type Config struct {
 	Name    string
 	Root    string
-	Windows []Window
+	Window []Window
 }
 
 func (c Config) createSession() {
@@ -26,7 +26,7 @@ func (c Config) createSession() {
 		return
 	}
 
-	if len(c.Windows) == 0 {
+	if len(c.Window) == 0 {
 		log.Fatal("No windows were provided")
 	}
 
@@ -36,7 +36,7 @@ func (c Config) createSession() {
 		log.Fatal(err)
 	}
 
-	for _, window := range c.Windows {
+	for _, window := range c.Window {
 		c.processWindow(window)
 	}
 
