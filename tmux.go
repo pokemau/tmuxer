@@ -50,24 +50,18 @@ func (c Config) createSession() {
 
 func (c Config) processWindow(window Window) {
 	c.createWindow(window)
+
 	if len(window.Layout) != 0 {
 		c.createPane(window)
+	}
 
-		panes := c.getPanes(window)
+	panes := c.getPanes(window)
 
-		if len(panes) != 0 {
-
-			if len(window.Commands) != 0 {
-				for i, paneIndex := range panes {
-					c.sendKeys(window, &paneIndex, i)
-				}
+	if len(window.Commands) > 0 {
+		for i, command := range window.Commands {
+			if command != "" {
+				c.sendKeys(window.Name, panes[i], command)
 			}
-
-			c.selectPane(window, panes[0])
-		}
-	} else {
-		if len(window.Commands) != 0 {
-			c.sendKeys(window, nil, 0)
 		}
 	}
 }
@@ -87,13 +81,11 @@ func (c Config) createWindow(window Window) {
 	}
 }
 
-func (c Config) sendKeys(window Window, paneIndex *int, commandIndex int) {
+func (c Config) sendKeys(windowName string, paneIndex int, command string) {
 	// tmux send-keys -t my-session:editor.0 'nvim .' Enter
-	target := c.Name + ":" + window.Name
-	if paneIndex != nil {
-		target += "." + strconv.Itoa(*paneIndex)
-	}
-	cmd := exec.Command("tmux", "send-keys", "-t", target, window.Commands[commandIndex], "Enter")
+	target := c.Name + ":" + windowName + "." + strconv.Itoa(paneIndex)
+
+	cmd := exec.Command("tmux", "send-keys", "-t", target, command, "Enter")
 	if err := cmd.Run(); err != nil {
 		log.Fatal(err)
 	}
