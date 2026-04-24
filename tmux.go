@@ -64,6 +64,8 @@ func (c Config) processWindow(window Window) {
 			}
 		}
 	}
+
+	c.selectPane(window, panes[0])
 }
 
 func (c Config) createWindow(window Window) {
