@@ -3,6 +3,8 @@ name = "tmuxer"
 root = "/home/mau/Code/tmuxer"
 
 [[window]]
-# name = ""
+name = "editor"
 # layout = "horizontal | vertical"
-# commands = []
+commands = ["nvim"]
+
+[[window]]

@@ -12,33 +12,49 @@ import (
 )
 
 func main() {
+	// TODO: start session tmuxer [config-path]
 	flag.Parse()
 
 	args := flag.Args()
 
-	if len(args) > 0 && args[0] == "init" {
-		if len(args) < 2 {
-			log.Fatal("Usage: tmuxer init <name> [config-path]")
-		}
+	configFile := "tm.toml"
 
-		name := args[1]
-		configPath := ""
-
-		if len(args) >= 3 {
-			configPath = args[2]
-		} else {
-			cwd, err := os.Getwd()
-			if err != nil {
-				log.Fatal(err)
+	if len(args) > 0 {
+		if args[0] == "init" {
+			if len(args) < 2 {
+				log.Fatal("Usage: tmuxer init <name> [config-path]")
 			}
-			configPath = cwd
+
+			name := args[1]
+			configPath := ""
+
+			if len(args) >= 3 {
+				configPath = args[2]
+			} else {
+				cwd, err := os.Getwd()
+				if err != nil {
+					log.Fatal(err)
+				}
+				configPath = cwd
+			}
+
+			generateConfig(name, configPath)
+			return
 		}
 
-		generateConfig(name, configPath)
-		return
+		info, err := os.Stat(args[0])
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		if info.IsDir() {
+			configFile = filepath.Join(args[0], "tm.toml")
+		} else {
+			configFile = args[0]
+		}
 	}
 
-	config := loadConfig("tm.toml")
+	config := loadConfig(configFile)
 
 	var conf Config
 
@@ -51,7 +67,6 @@ func main() {
 		log.Fatal("Insert a session name")
 	}
 
-
 	conf.createSession()
 	conf.attachSession()
 }
@@ -61,7 +76,7 @@ func generateConfig(sessionName string, configPath string) {
 name = "%s"
 root = "%s"
 
-[[windows]]
+[[window]]
 # name = ""
 # layout = "horizontal | vertical"
 commands = []
