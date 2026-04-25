@@ -77,7 +77,7 @@ root = "%s"
 
 [[window]]
 # name = ""
-# layout = "horizontal | vertical"
+# layout = "horizontal" or "vertical"
 commands = []
 `, sessionName, configPath)
 
