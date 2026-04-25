@@ -12,7 +12,6 @@ import (
 )
 
 func main() {
-	// TODO: start session tmuxer [config-path]
 	flag.Parse()
 
 	args := flag.Args()

@@ -6,6 +6,7 @@ import (
 	"os/exec"
 	"strconv"
 	"strings"
+	"syscall"
 )
 
 type Window struct {
@@ -15,8 +16,8 @@ type Window struct {
 }
 
 type Config struct {
-	Name    string
-	Root    string
+	Name   string
+	Root   string
 	Window []Window
 }
 
@@ -157,11 +158,12 @@ func (c Config) createPane(window Window) {
 }
 
 func (c Config) attachSession() {
-	cmd := exec.Command("tmux", "attach", "-t", c.Name)
-	cmd.Stdin = os.Stdin
-	cmd.Stdout = os.Stdout
-	cmd.Stderr = os.Stderr
-	if err := cmd.Run(); err != nil {
+	bin, err := exec.LookPath("tmux")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	if err := syscall.Exec(bin, []string{"tmux", "attach", "-t", c.Name}, os.Environ()); err != nil {
 		log.Fatal(err)
 	}
 }
