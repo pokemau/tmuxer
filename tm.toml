@@ -1,0 +1,8 @@
+# tmux session name
+name = "tmuxer"
+root = "/home/mau/Code/tmuxer"
+
+[[window]]
+# name = ""
+# layout = "horizontal | vertical"
+# commands = []
