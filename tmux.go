@@ -167,3 +167,7 @@ func (c Config) attachSession() {
 		log.Fatal(err)
 	}
 }
+
+func (c Config) killSession() {
+	_ = exec.Command("tmux", "kill-session", "-t", c.Name).Run()
+}

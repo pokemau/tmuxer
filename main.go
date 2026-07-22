@@ -17,9 +17,12 @@ func main() {
 	args := flag.Args()
 
 	configFile := "tm.toml"
+	restart := false
+	targetArg := ""
 
 	if len(args) > 0 {
-		if args[0] == "init" {
+		switch args[0] {
+		case "init":
 			if len(args) < 2 {
 				log.Fatal("Usage: tmuxer init <name> [config-path]")
 			}
@@ -38,19 +41,30 @@ func main() {
 			}
 
 			generateConfig(name, configPath)
-			return
+		case "restart":
+			restart = true
+			if len(args) > 1 {
+				targetArg = args[1]
+			}
+		default:
+			targetArg = args[0]
 		}
 
-		info, err := os.Stat(args[0])
-		if err != nil {
-			log.Fatal(err)
+		if targetArg != "" {
+
+			info, err := os.Stat(targetArg)
+			if err != nil {
+				log.Fatal(err)
+			}
+
+			if info.IsDir() {
+				configFile = filepath.Join(args[0], "tm.toml")
+			} else {
+				configFile = args[0]
+			}
+
 		}
 
-		if info.IsDir() {
-			configFile = filepath.Join(args[0], "tm.toml")
-		} else {
-			configFile = args[0]
-		}
 	}
 
 	config := loadConfig(configFile)
@@ -64,6 +78,10 @@ func main() {
 
 	if len(conf.Name) == 0 {
 		log.Fatal("Insert a session name")
+	}
+
+	if restart {
+		conf.killSession()
 	}
 
 	conf.createSession()
