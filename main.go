@@ -18,6 +18,7 @@ func main() {
 
 	configFile := "tm.toml"
 	restart := false
+	kill := false
 	targetArg := ""
 
 	if len(args) > 0 {
@@ -46,6 +47,9 @@ func main() {
 			if len(args) > 1 {
 				targetArg = args[1]
 			}
+		case "kill":
+			kill = true
+
 		default:
 			targetArg = args[0]
 		}
@@ -80,12 +84,14 @@ func main() {
 		log.Fatal("Insert a session name")
 	}
 
-	if restart {
+	if restart || kill {
 		conf.killSession()
 	}
 
-	conf.createSession()
-	conf.attachSession()
+	if !kill {
+		conf.createSession()
+		conf.attachSession()
+	}
 }
 
 func generateConfig(sessionName string, configPath string) {
